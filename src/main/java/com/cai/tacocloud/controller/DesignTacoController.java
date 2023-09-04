@@ -7,10 +7,7 @@ import com.cai.tacocloud.entity.TacoOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +61,9 @@ public class DesignTacoController {
     }
 
     @ModelAttribute(name = "tacoOrder")
+    /*
+      创建新的对象放置到模型中
+     */
     public TacoOrder order() {
         return new TacoOrder();
     }
@@ -80,6 +80,17 @@ public class DesignTacoController {
      */
     public String showDesignForm() {
         return "design";
+    }
+
+    @PostMapping
+    /*
+      TacoOrder参数上所使用的@ModelAttribute表明它应该使用模型中的TacoOrder对象
+     */
+    public String processTaco(Taco taco, @ModelAttribute TacoOrder tacoOrder) {
+        tacoOrder.addTaco(taco);
+        log.info("Processing taco: {}", taco);
+
+        return "redirect:/orders/current";
     }
 
     private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
