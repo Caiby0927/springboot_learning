@@ -7,8 +7,10 @@ import com.cai.tacocloud.entity.TacoOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,12 +86,22 @@ public class DesignTacoController {
 
     @PostMapping
     /*
+      @PostMapping与@RequestMapping协作，指定processTaco方法要处理针对"/design"的POST请求
       TacoOrder参数上所使用的@ModelAttribute表明它应该使用模型中的TacoOrder对象
+      @Valid注解会告诉SpringMVC要对提交的Taco对象进行校验，而校验时机是绑定完表单之后、调用processDesign()之前
      */
-    public String processTaco(Taco taco, @ModelAttribute TacoOrder tacoOrder) {
+    public String processTaco(@Valid Taco taco, Errors errors, @ModelAttribute TacoOrder tacoOrder) {
+        if (errors.hasErrors()) {
+//            判断是否有校验错误
+            return "design";
+        }
+
         tacoOrder.addTaco(taco);
         log.info("Processing taco: {}", taco);
 
+        /*
+          redirect: 表明这是一个重定向视图，在processTaco完成后，用户的浏览器会重定向到相对路径"/order/current"
+         */
         return "redirect:/orders/current";
     }
 
