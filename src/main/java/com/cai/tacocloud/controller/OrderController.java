@@ -1,5 +1,6 @@
 package com.cai.tacocloud.controller;
 
+import com.cai.tacocloud.data.OrderRepository;
 import com.cai.tacocloud.entity.TacoOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,12 @@ import javax.validation.Valid;
 @SessionAttributes("tacoOrder")
 public class OrderController {
 
+    private OrderRepository orderRepo;
+
+    public OrderController(OrderRepository orderRepo) {
+        this.orderRepo = orderRepo;
+    }
+
     @GetMapping("/current")
     public String orderForm() {
         return "orderForm";
@@ -29,6 +36,7 @@ public class OrderController {
             return "orderForm";
         }
 
+        orderRepo.save(tacoOrder);
         log.info("Order submitted: {}", tacoOrder);
         /*
           当用户创建他们的第一个taco时，TacoOrder对象会被初始创建并放到会话中，通过调用setComplete()，我们能够确保会话被清理掉，从而为用户
