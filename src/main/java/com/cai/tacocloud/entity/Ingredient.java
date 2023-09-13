@@ -2,6 +2,8 @@ package com.cai.tacocloud.entity;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 /*
@@ -9,8 +11,10 @@ import lombok.RequiredArgsConstructor;
   as arguments.
  */
 @RequiredArgsConstructor
+@Table
 public class Ingredient {
 
+    @Id
     private final String id;
 
     private final String name;
